@@ -1,0 +1,57 @@
+---
+title: "Assignment 4"
+author: "Harry Selvakumar"
+date: "10/9/2026"
+output: html_document
+---
+```{r}
+
+library(fpp2)
+library(forecast)
+
+TOTALSA <- read.csv("TOTALSA.csv")
+
+TOTALSA_ts <- ts(
+  TOTALSA$TOTALSA,
+  start = c(1976, 1),
+  frequency = 12
+)
+
+head(TOTALSA_ts)
+plot(TOTALSA_ts)
+```
+
+```{r}
+library(fpp2)
+
+head(TOTALSA_ts)
+plot(TOTALSA_ts)
+
+stl_decomp <- stl(TOTALSA_ts, s.window = "periodic")
+plot(stl_decomp)
+attributes(stl_decomp)
+
+# Lets print out a seasonal adjustment
+seasadj(stl_decomp)
+
+# Plot a line on the graph
+plot(TOTALSA_ts)
+lines(seasadj(stl_decomp), col = "Red")
+
+# Default period forecast
+f_stl <- forecast(stl_decomp)
+
+# You can pass the number of periods
+f_stl <- forecast(stl_decomp, h = 15)
+f_stl
+plot(f_stl)
+
+# There is more than one way to do things
+decomp_TOTALSA <- decompose(TOTALSA_ts)
+
+# Each one shows different attributes
+attributes(decomp_TOTALSA)
+seasadj(decomp_TOTALSA)
+```
+
+
